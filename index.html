@@ -137,7 +137,7 @@
 
         // Nếu lifetime về 0, gọi lại hàm tạo OTP
         if (remainingTime == 1) {
-          setTimeout(generateOTP, 1000);
+          setTimeout(generateOTP, 1200);
           clearInterval(interval); // Dừng lại việc kiểm tra
         }
       }, 1000); // Kiểm tra mỗi giây
