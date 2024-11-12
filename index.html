@@ -1,141 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loto</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
-        integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"
-        integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2"
-        crossorigin="anonymous"></script>
-    <style>
-        #multi-table div {
-            width: 30% !important;
-            position: relative;
-        }
-
-        table {
-            border: 3px solid black !important;
-        }
-
-        .btn-remove {
-            position: absolute;
-            width: 32px;
-            height: 32px;
-            font-weight: bold;
-            text-align: center;
-            right: -15px;
-            top: -12px;
-        }
-
-        .btn-remove:hover {
-            cursor: pointer;
-            width: 35px;
-            height: 35px;
-        }
-
-        .name {
-            position: absolute;
-            width: 100px;
-            height: 20px;
-            top: -21px;
-        }
-
-        body {
-            background-image: url("bingo.jpg");
-            background-repeat: repeat;
-            background-size: cover;
-            /* color: white; */
-            /* background-position: center; */
-        }
-    </style>
-    <script>
-        function loadedPageFunction() { alert("Loaded PAge Function Called"); }
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chuỗi Tách Phần Tử Cuối Cùng</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    textarea, button {
+      width: 100%;
+      margin-top: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+  <script src="script.js"></script>
 </head>
-
 <body>
-    <form action="" id="huhu"></form>
-    <div class="container pt-5 bg-white">
-        <marquee class="banner bg-dark" direction="left">
-            <h1 class="text-center text-success font-weight-bold">Loto - Bingo</h1>
-        </marquee>
-        <form class="w-100" id="form" action="">
-            <h5 class="text-center">Điền 25 số vào input và giữa 2 số có dấu "Space" </h5>
-            <div class="form-group w-100 d-flex justify-content-center">
-                <label for="" class="font-weight-bold" style="width: 150px;">Tạo phiếu loto</label>
-                <input type="text" class="form-control" id="phieuLoto">
-                <button type="button" class="btn btn-success mb-2 ml-1" id="add">Tạo</button>
-            </div>
-            <div class="form-group w-100 d-flex justify-content-center">
-                <label for="" class="font-weight-bold" style="width: 150px;">Nhập số loto</label>
-                <input type="text" class="form-control w-50" id="soLoto" autocomplete="off">
-                <button type="submit" class="btn btn-success mb-2 ml-1" onclick="event.preventDefault()"
-                    id="enter">Nhập</button>
-            </div>
-            <div class="form-group w-100 d-flex justify-content-center">
-                <label class="font-weight-bold m-0" style="width: 150px;">Xóa số loto</label>
-                <input type="text" class="form-control w-50" id="removeSoLoto" autocomplete="off">
-                <button type="submit" class="btn btn-danger mb-2 ml-1" onclick="event.preventDefault()"
-                    id="remove">Xóa</button>
-            </div>
-            <div class="d-flex justify-content-center align-items-center mb-2">
-                <button type="button" onclick="loadLichSuPhieu()" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                    Lịch sử phiếu
-                </button>
-                <button type="button" style="display: none;" class="btn btn-primary btn-bingo" data-toggle="modal" data-target="#bingoModal">
-                   bingo
-                </button>
-            </div>
-            <h5 class="text-center"><strong>TPBank - 02072786301 - Tran Minh Thuan</strong> - Nếu trúng hãy lộc cho e 1
-                ít nha a/c xinh đẹp, dễ thương </h5>
-            <h5 class="text-center text-success">* Click vào số trong phiếu loto để sửa nếu điền sai</h5>
-            <h5 class="numbers text-center bg-dark text-white mb-4"></h5>
-        </form>
-        <div id="multi-table" class="d-flex justify-content-around flex-row flex-wrap pt-3">
-        </div>
 
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document" style="max-width: 50% !important">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Lịch sử phiếu loto</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body d-flex flex-column">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <h2>Nhập Chuỗi Cần Tách</h2>
+  <textarea id="inputText" rows="10" placeholder="Nhập các chuỗi, mỗi chuỗi trên một dòng..."></textarea>
+  <button onclick="extractAndFetchData()">Tách và Hiển Thị Kết Quả</button>
+  
+  <h3>Kết Quả</h3>
+  <div id="output"></div>
 
-        <div class="modal fade" id="bingoModal" tabindex="-1" role="dialog" aria-labelledby="bingoModal"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document" style="max-width: 40% !important; top:30%">
-                <div class="modal-content">
-                    <div class="modal-body-bingo">
-                        <img src="bingo5.gif" style="width: 100%; height: 350px" alt="">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script src="loto.js"></script>
 </body>
-
 </html>
