@@ -59,61 +59,78 @@
     .copy-button:hover {
       background-color: #007bb5;
     }
+
+    /* Style cho dialog thông báo */
+    .dialog {
+      display: none;
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 14px;
+      z-index: 1000;
+    }
   </style>
 </head>
 
 <body>
   <h1>OTP Generator</h1>
-  <textarea id="inputText" rows="10" cols="50" placeholder="Nhập các chuỗi ở đây..."></textarea><br><br>
+  <textarea id="inputText" rows="10" cols="50" placeholder="Format: User|Password|2FA"></textarea><br><br>
   <button onclick="generateOTP()">Tạo OTP</button>
 
   <div id="output"></div>
+  <div id="dialog" class="dialog">Sao chép thành công!</div>
 
   <script>
-    // Hàm để tạo OTP từ secret key và hiển thị kết quả vào bảng
     function generateOTP() {
-      const inputText = document.getElementById("inputText").value;
-      const lines = inputText.split("\n");  // Tách các dòng
+      const inputText = document.getElementById("inputText").value.trim();
+      if (!inputText) {
+        document.getElementById("output").innerHTML = "";  // Xóa bảng nếu không có dữ liệu
+        return;
+      }
 
+      const lines = inputText.split("\n");  // Tách các dòng
       let table = "<table>";
-      table += "<tr><th>User</th><th>Password</th><th>2FA Code</th><th>OTP</th><th>Lifetime</th><th>Copy</th></tr>";
+      table += "<tr><th>STT</th><th>User</th><th>Password</th><th>2FA Code</th><th>OTP</th><th>Lifetime</th><th>Copy</th></tr>";
 
       // Duyệt qua từng dòng và xử lý
+      let index = 1;
       for (const line of lines) {
-        const parts = line.split("|");  // Tách từng phần bằng dấu "|"
+        const parts = line.split("|");  
         const col1 = parts[0] || "";
         const col2 = parts[1] || "";
         const col3 = parts[2] || "";
 
         let otp = "";
-        let lifetime = 30;  // Lifetime mặc định là 30 giây
+        let lifetime = 30;  
 
         if (col3) {
-          // Sử dụng otplib để tạo mã OTP từ secret key (col3)
-          otp = otplib.authenticator.generate(col3);  // Tạo OTP từ secret key
-
-          // Lifetime là thời gian mà mã OTP có hiệu lực, trong trường hợp này mặc định là 30 giây
+          otp = otplib.authenticator.generate(col3);
           lifetime = otplib.authenticator.timeRemaining();
         }
 
-        // Thêm dữ liệu vào bảng
         table += `<tr>
+                    <td>${index}</td>
                     <td>${col1}</td>
                     <td>${col2}</td>
                     <td>${col3}</td>
-                    <td id="otp-${col3}">${otp}</td>
-                    <td id="lifetime-${col3}">${lifetime} giây</td>
+                    <td id="otp-${index}">${otp}</td>
+                    <td id="lifetime-${index}">${lifetime} giây</td>
                     <td><button class="copy-button" onclick="copyToClipboard('${otp}')">Copy</button></td>
                   </tr>`;
 
-        // Kiểm tra thời gian còn lại và tự động gọi lại khi Lifetime về 0
-        checkLifetime(col3, lifetime);
+        updateLifetimeAndOTP(index, col3); // Cập nhật OTP và lifetime cho mỗi dòng
+
+        index++;
       }
       table += "</table>";
-      document.getElementById("output").innerHTML = table;  // Hiển thị bảng
+      document.getElementById("output").innerHTML = table; 
     }
 
-    // Hàm sao chép mã OTP vào clipboard
+    // Hàm sao chép mã OTP vào clipboard và hiển thị thông báo thành công
     function copyToClipboard(text) {
       const input = document.createElement('input');
       input.value = text;
@@ -121,26 +138,32 @@
 
       input.select();
       document.execCommand('copy');
-
       document.body.removeChild(input);
+
+      showDialog();  // Hiển thị thông báo thành công
     }
 
-    // Hàm kiểm tra thời gian còn lại và tự động gọi lại nếu Lifetime = 0
-    function checkLifetime(secretKey, lifetime) {
-      const interval = setInterval(() => {
-        const remainingTime = otplib.authenticator.timeRemaining();  // Kiểm tra thời gian còn lại
-        const otpElement = document.getElementById(`otp-${secretKey}`);
-        const lifetimeElement = document.getElementById(`lifetime-${secretKey}`);
+    // Hàm hiển thị thông báo sao chép thành công
+    function showDialog() {
+      const dialog = document.getElementById("dialog");
+      dialog.style.display = "block";  // Hiển thị dialog
 
-        // Cập nhật thời gian lifetime
-        lifetimeElement.textContent = `${remainingTime} giây`;
+      setTimeout(() => {
+        dialog.style.display = "none";  // Ẩn dialog sau 2 giây
+      }, 2000);
+    }
 
-        // Nếu lifetime về 0, gọi lại hàm tạo OTP
-        if (remainingTime == 1) {
-          setTimeout(generateOTP, 1200);
-          clearInterval(interval); // Dừng lại việc kiểm tra
-        }
-      }, 1000); // Kiểm tra mỗi giây
+    // Hàm cập nhật OTP và thời gian còn lại mà không làm mới toàn bộ bảng
+    function updateLifetimeAndOTP(index, secretKey) {
+      setInterval(() => {
+        const otp = otplib.authenticator.generate(secretKey);
+        const remainingTime = otplib.authenticator.timeRemaining();
+
+        // Cập nhật cột OTP và Lifetime cho dòng hiện tại
+        document.getElementById(`otp-${index}`).textContent = otp;
+        document.getElementById(`lifetime-${index}`).textContent = `${remainingTime} giây`;
+
+      }, 1000); // Cập nhật mỗi giây
     }
   </script>
 </body>
