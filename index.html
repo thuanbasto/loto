@@ -119,7 +119,7 @@
                     <td>${col3}</td>
                     <td id="otp-${index}">${otp}</td>
                     <td id="lifetime-${index}">${lifetime} giây</td>
-                    <td><button class="copy-button" onclick="copyToClipboard('${otp}')">Copy</button></td>
+                    <td><button class="copy-button" onclick="copyToClipboard('otp-${index}')">Copy</button></td>
                   </tr>`;
 
         updateLifetimeAndOTP(index, col3); // Cập nhật OTP và lifetime cho mỗi dòng
@@ -131,9 +131,12 @@
     }
 
     // Hàm sao chép mã OTP vào clipboard và hiển thị thông báo thành công
-    function copyToClipboard(text) {
+    function copyToClipboard(otpId) {
+      const otpElement = document.getElementById(otpId);
+      const otp = otpElement.textContent;
+
       const input = document.createElement('input');
-      input.value = text;
+      input.value = otp;
       document.body.appendChild(input);
 
       input.select();
